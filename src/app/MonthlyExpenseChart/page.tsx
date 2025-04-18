@@ -26,8 +26,18 @@ const monthLabels = [
   "Dec",
 ];
 
-function groupByMonth(transactions: any[]) {
-  const monthlyTotals: { [key: string]: number } = {};
+interface Transaction {
+  date: string;
+  amount: number;
+}
+
+interface MonthlyData {
+  month: string;
+  amount: number;
+}
+
+function groupByMonth(transactions: Transaction[]): MonthlyData[] {
+  const monthlyTotals: Record<string, number> = {};
 
   transactions.forEach((txn) => {
     const date = new Date(txn.date);

@@ -17,7 +17,7 @@ interface Transaction {
   date: string;
 }
 
-export default function dashboard() {
+export default function Dashboard() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
 

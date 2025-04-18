@@ -58,8 +58,14 @@ export async function PUT(req: Request) {
       { message: "Transaction updated!", data: updatedTransaction },
       { status: 200 }
     );
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json(
+      { error: "Unknown error occurred" },
+      { status: 500 }
+    );
   }
 }
 
@@ -82,7 +88,13 @@ export async function DELETE(
     }
 
     return NextResponse.json({ message: "Transaction deleted successfully." });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json(
+      { error: "Unknown error occurred" },
+      { status: 500 }
+    );
   }
 }

@@ -2,6 +2,12 @@ import { connect } from "@/dbConfig/dbConfig";
 import { NextResponse } from "next/server";
 import Budget from "@/models/budgetModel";
 
+interface MongoServerError extends Error {
+  name: string;
+  keyPattern?: Record<string, any>;
+  keyValue?: Record<string, any>;
+}
+
 export async function POST(req: Request) {
   try {
     await connect();
@@ -9,20 +15,23 @@ export async function POST(req: Request) {
     const newBudget = await Budget.create(data);
     console.log(newBudget);
     return NextResponse.json({ message: "Budget saved!" }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const mongoError = error as MongoServerError;
+
     if (
-      error.name === "MongoServerError" &&
-      error.keyPattern?.category &&
-      error.keyPattern?.month
+      mongoError.name === "MongoServerError" &&
+      mongoError.keyPattern?.category &&
+      mongoError.keyPattern?.month
     ) {
       return NextResponse.json(
         {
-          error: `Budget for ${error.keyValue.category} in ${error.keyValue.month} already exists.`,
+          error: `Budget for ${mongoError.keyValue?.category} in ${mongoError.keyValue?.month} already exists.`,
         },
         { status: 400 }
       );
     }
-    return NextResponse.json({ error: error.message }, { status: 500 });
+
+    return NextResponse.json({ error: mongoError.message }, { status: 500 });
   }
 }
 
@@ -31,7 +40,7 @@ export async function GET() {
     await connect();
     const budgets = await Budget.find().sort({ createdAt: -1 });
     return NextResponse.json(budgets, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching budgets:", error);
     return NextResponse.json(
       { message: "Failed to fetch budgets" },

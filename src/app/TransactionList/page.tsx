@@ -37,7 +37,7 @@ export default function TransactionList() {
     try {
       const response = await axios.get("/api/transaction");
       setTransactions(response.data);
-    } catch (err: any) {
+    } catch (err) {
       console.error("Error fetching transactions", err);
     }
   };
