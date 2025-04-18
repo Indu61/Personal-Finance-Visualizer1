@@ -72,12 +72,12 @@ export async function PUT(req: Request) {
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await connect();
 
-    const { id } = params;
+    const { id } = await context.params;
 
     const deleted = await Transaction.findByIdAndDelete(id);
 
