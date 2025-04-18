@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
+import { Suspense } from "react";
 import {
   Select,
   SelectContent,
@@ -79,6 +80,9 @@ export default function AddTransaction() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center pt-12">
+      <Suspense fallback={<div>Loading form...</div>}>
+        <AddTransaction />
+      </Suspense>
       <div className="bg-white p-6 rounded shadow-md w-full max-w-lg">
         <h2 className="text-xl font-semibold mb-4">
           {isEditMode ? "Edit Transaction" : "Add New Transaction"}
