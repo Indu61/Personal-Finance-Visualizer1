@@ -23,15 +23,28 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(req: Request, context: { params: { id: string } }) {
   try {
     await connect();
-    const transactions = await Transaction.find().sort({ createdAt: -1 });
-    return NextResponse.json(transactions, { status: 200 });
+    const { id } = context.params;
+
+    const transaction = await Transaction.findById(id);
+
+    if (!transaction) {
+      return NextResponse.json(
+        { error: "Transaction not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(transaction, { status: 200 });
   } catch (error) {
-    console.error("Error fetching transactions:", error);
+    console.error("Error fetching transaction:", error);
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
     return NextResponse.json(
-      { message: "Failed to fetch transactions" },
+      { error: "Unknown error occurred" },
       { status: 500 }
     );
   }
