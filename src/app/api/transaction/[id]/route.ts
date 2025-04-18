@@ -3,13 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 import Transaction from "@/models/transactionModel";
 
 export async function GET(
-  req: NextRequest,
+  _req: Request,
   { params }: { params: { id: string } }
 ) {
   try {
     await connect();
     const transaction = await Transaction.findById(params.id);
-    console.log(transaction);
+
     if (!transaction) {
       return NextResponse.json(
         { error: "Transaction not found" },
