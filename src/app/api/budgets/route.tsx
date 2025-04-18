@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   try {
     await connect();
     const data = await req.json();
-    const newBudget = await Budget.create(data);
+    await Budget.create(data);
     return NextResponse.json({ message: "Budget saved!" }, { status: 201 });
   } catch (error) {
     if (
