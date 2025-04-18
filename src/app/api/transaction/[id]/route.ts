@@ -1,15 +1,16 @@
 import { connect } from "@/dbConfig/dbConfig";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Transaction from "@/models/transactionModel";
 
 export async function GET(
-  _req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await connect();
-    const transaction = await Transaction.findById(params.id);
-
+    const { id } = await context.params;
+    const transaction = await Transaction.findById(id);
+    console.log("hi", transaction);
     if (!transaction) {
       return NextResponse.json(
         { error: "Transaction not found" },
