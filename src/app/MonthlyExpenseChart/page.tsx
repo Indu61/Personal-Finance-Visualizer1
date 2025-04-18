@@ -82,7 +82,7 @@ export default function MonthlyExpenseChart() {
           <Tooltip formatter={(value) => `₹${value}`} />
           <Bar
             dataKey="amount"
-            fill="#0f0f0f"
+            fill="hsl(12 76% 61%)"
             radius={[4, 4, 0, 0]}
             barSize={30}
           />
