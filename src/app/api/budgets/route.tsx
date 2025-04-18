@@ -2,36 +2,42 @@ import { connect } from "@/dbConfig/dbConfig";
 import { NextResponse } from "next/server";
 import Budget from "@/models/budgetModel";
 
-interface MongoServerError extends Error {
-  name: string;
-  keyPattern?: Record<string, any>;
-  keyValue?: Record<string, any>;
-}
-
 export async function POST(req: Request) {
   try {
     await connect();
     const data = await req.json();
     const newBudget = await Budget.create(data);
-    console.log(newBudget);
     return NextResponse.json({ message: "Budget saved!" }, { status: 201 });
-  } catch (error: unknown) {
-    const mongoError = error as MongoServerError;
-
+  } catch (error) {
     if (
-      mongoError.name === "MongoServerError" &&
-      mongoError.keyPattern?.category &&
-      mongoError.keyPattern?.month
+      error instanceof Error &&
+      "name" in error &&
+      error.name === "MongoServerError" &&
+      "keyPattern" in error &&
+      typeof error.keyPattern === "object" &&
+      error.keyPattern &&
+      "category" in error.keyPattern &&
+      "month" in error.keyPattern &&
+      "keyValue" in error
     ) {
+      const { category, month } = error.keyValue as {
+        category: string;
+        month: string;
+      };
       return NextResponse.json(
-        {
-          error: `Budget for ${mongoError.keyValue?.category} in ${mongoError.keyValue?.month} already exists.`,
-        },
+        { error: `Budget for ${category} in ${month} already exists.` },
         { status: 400 }
       );
     }
 
-    return NextResponse.json({ error: mongoError.message }, { status: 500 });
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(
+      { error: "Unknown error occurred" },
+      { status: 500 }
+    );
   }
 }
 

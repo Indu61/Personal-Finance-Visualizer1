@@ -33,7 +33,7 @@ export default function BudgetList() {
     try {
       const response = await axios.get("/api/budgets");
       setBudgets(response.data);
-    } catch (err: any) {
+    } catch (err) {
       console.error("Error fetching budgets", err);
     }
   };
