@@ -25,8 +25,6 @@ interface Transaction {
 export default function TransactionList() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  // const [editingTransaction, setEditingTransaction] =
-  //   useState<Transaction | null>(null);
   const router = useRouter();
 
   const onNew = () => {
@@ -43,15 +41,14 @@ export default function TransactionList() {
   };
 
   const handleEdit = (transaction: Transaction) => {
-    // setEditingTransaction(transaction);
-    //console.log("hi");
+    
     router.push(`/AddTransaction?id=${transaction._id}`);
   };
 
   const handleDelete = async (id: string) => {
     try {
       await axios.delete(`/api/transaction/${id}`);
-      // Refresh the list after delete
+      
       setTransactions((prev) => prev.filter((txn) => txn._id !== id));
     } catch (err) {
       console.error("Failed to delete transaction", err);

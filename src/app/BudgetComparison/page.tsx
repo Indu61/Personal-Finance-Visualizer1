@@ -17,6 +17,91 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import axios from "axios";
+
+interface Transaction {
+  _id: string;
+  category: string;
+  amount: number;
+  date: Date;
+  description: string;
+}
+
+
+const fetchingTransaction = async () => {
+  try {
+    const response = await axios.get("/api/transaction");
+  } catch (error) {}
+};
+
+// export const getMonthlyTransactionSummary = async (req, res) => {
+//   try {
+//     const startDate = new Date("2024-03-01");
+//     const endDate = new Date(); // current date
+
+//     // 1. Aggregate the transaction totals
+//     const rawSummary = await Transaction.aggregate([
+//       {
+//         $match: {
+//           date: {
+//             $gte: startDate,
+//             $lte: endDate,
+//           },
+//         },
+//       },
+//       {
+//         $group: {
+//           _id: {
+//             year: { $year: "$date" },
+//             month: { $month: "$date" },
+//           },
+//           totalAmount: { $sum: "$amount" },
+//         },
+//       },
+//       {
+//         $project: {
+//           _id: 0,
+//           year: "$_id.year",
+//           month: "$_id.month",
+//           totalAmount: 1,
+//         },
+//       },
+//       {
+//         $sort: {
+//           year: 1,
+//           month: 1,
+//         },
+//       },
+//     ]);
+
+//     const filledSummary = [];
+//     const current = new Date(startDate);
+//     const monthMap = new Map(
+//       rawSummary.map((item) => [`${item.year}-${item.month}`, item.totalAmount])
+//     );
+
+//     while (current <= endDate) {
+//       const year = current.getFullYear();
+//       const month = current.getMonth() + 1;
+
+//       const key = `${year}-${month}`;
+//       const totalAmount = monthMap.get(key) || 0;
+
+//       filledSummary.push({
+//         year,
+//         month,
+//         totalAmount,
+//       });
+
+//       current.setMonth(current.getMonth() + 1);
+//     }
+
+//     res.status(200).json(filledSummary);
+//   } catch (error) {
+//     res.status(500).json({ error: "Server Error", details: error.message });
+//   }
+// };
+
 const chartData = [
   { month: "January", desktop: 186, mobile: 80 },
   { month: "February", desktop: 305, mobile: 200 },
