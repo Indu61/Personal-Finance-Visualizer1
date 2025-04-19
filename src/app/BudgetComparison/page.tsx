@@ -17,22 +17,21 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import axios from "axios";
+//import axios from "axios";
 
-interface Transaction {
-  _id: string;
-  category: string;
-  amount: number;
-  date: Date;
-  description: string;
-}
+// interface Transaction {
+//   _id: string;
+//   category: string;
+//   amount: number;
+//   date: Date;
+//   description: string;
+// }
 
-
-const fetchingTransaction = async () => {
-  try {
-    const response = await axios.get("/api/transaction");
-  } catch (error) {}
-};
+// const fetchingTransaction = async () => {
+//   try {
+//     const response = await axios.get("/api/transaction");
+//   } catch (error) {}
+// };
 
 // export const getMonthlyTransactionSummary = async (req, res) => {
 //   try {
